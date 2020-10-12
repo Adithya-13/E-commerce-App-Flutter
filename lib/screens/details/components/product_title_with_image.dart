@@ -46,11 +46,29 @@ class ProductTitleWithImage extends StatelessWidget {
               ),
               SizedBox(width: kDefaultPaddin),
               Expanded(
-                child: Hero(
-                  tag: "${product.id}",
-                  child: Image.network(
-                    product.image,
-                    fit: BoxFit.fill,
+                child: Container(
+                  padding: EdgeInsets.all(kDefaultPaddin),
+                  // For  demo we use fixed height  and width
+                  // Now we dont need them
+                  // height: 180,
+                  // width: 160,
+                  decoration: BoxDecoration(
+                    color: Color(0xffF8F8F8),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        offset: Offset(0, 2),
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: Hero(
+                    tag: "${product.id}",
+                    child: Image.network(
+                      product.image,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
               )

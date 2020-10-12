@@ -1,39 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/models/ProductProvider.dart';
 
 import '../../../constants.dart';
 
 // We need satefull widget for our categories
 
-class Categories extends StatefulWidget {
-  @override
-  _CategoriesState createState() => _CategoriesState();
-}
-
-class _CategoriesState extends State<Categories> {
-  List<String> categories = ["Hand bag", "Jewellery", "Footwear", "Dresses"];
-  // By default our first item will be selected
-  int selectedIndex = 0;
+class Categories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // By default our first item will be selected
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin),
       child: SizedBox(
         height: 25,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: categories.length,
-          itemBuilder: (context, index) => buildCategory(index),
+          itemCount: Provider.of<ProductProvider>(context).getLength(),
+          itemBuilder: (context, index) => buildCategory(index, context),
         ),
       ),
     );
   }
 
-  Widget buildCategory(int index) {
+  Widget buildCategory(int index, BuildContext context) {
+    int selectedIndex =
+        Provider.of<ProductProvider>(context).getSelectedIndex();
     return GestureDetector(
       onTap: () {
-        setState(() {
-          selectedIndex = index;
-        });
+        Provider.of<ProductProvider>(context, listen: false)
+            .selectedIndex(index);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
@@ -41,7 +38,7 @@ class _CategoriesState extends State<Categories> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              categories[index],
+              Provider.of<ProductProvider>(context).getCategories(index),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: selectedIndex == index ? kTextColor : kTextLightColor,
