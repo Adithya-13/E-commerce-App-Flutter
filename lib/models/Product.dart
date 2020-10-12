@@ -8,6 +8,7 @@ class Product {
   final String image, title, description;
   final int price, size, id;
   final Color color;
+
   Product({
     this.id,
     this.image,
@@ -24,11 +25,12 @@ class ProductData {
       "https://halal-food-service-290609.dt.r.appspot.com/products";
   List<Product> products = [];
 
-  Future getProductData() async {
-    Response response = await get(baseUrl);
+  Future getProductData(int page) async {
+    Response response = await get("$baseUrl?page=$page");
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body);
-      for (int i = 0; i < 10; i++) {
+      List responseData = decodedData["response"]["data"];
+      for (int i = 0; i < responseData.length; i++) {
         String title = decodedData["response"]["data"][i]["title"];
         String image = decodedData["response"]["data"][i]["images"][0]["src"];
         String description = decodedData["response"]["data"][i]["description"];
@@ -43,7 +45,6 @@ class ProductData {
           color: Color((Random().nextDouble() * 0xFFFFFF).toInt())
               .withOpacity(1.0),
         );
-        print(item);
         products.add(item);
       }
       return products;

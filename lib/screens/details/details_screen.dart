@@ -8,6 +8,7 @@ class DetailsScreen extends StatelessWidget {
   final Product product;
 
   const DetailsScreen({Key key, this.product}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +23,7 @@ class DetailsScreen extends StatelessWidget {
     return AppBar(
       backgroundColor: product.color,
       elevation: 0,
+      title: Text(product.title.toUpperCase()),
       leading: IconButton(
         icon: SvgPicture.asset(
           'assets/icons/back.svg',
