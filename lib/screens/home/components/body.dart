@@ -16,12 +16,13 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   List<Product> products = [];
   bool isWaiting = false;
-  int position = 1;
+  int start = 0;
 
-  void getListProducts(int page) async {
+  void getListProducts(int numberStart) async {
     isWaiting = true;
     try {
-      List<Product> listProduct = await ProductData().getProductData(page);
+      List<Product> listProduct =
+          await ProductData().getProductData(numberStart);
       isWaiting = false;
       setState(() {
         products = listProduct;
@@ -32,10 +33,11 @@ class _BodyState extends State<Body> {
     }
   }
 
-  Future getMoreProducts(int page) async {
+  Future getMoreProducts(int numberStart) async {
     isWaiting = true;
     try {
-      List<Product> listProduct = await ProductData().getProductData(page);
+      List<Product> listProduct =
+          await ProductData().getProductData(numberStart);
       isWaiting = false;
       setState(() {
         products.addAll(listProduct);
@@ -49,7 +51,7 @@ class _BodyState extends State<Body> {
   @override
   void initState() {
     super.initState();
-    getListProducts(position);
+    getListProducts(start);
   }
 
   @override
@@ -63,7 +65,7 @@ class _BodyState extends State<Body> {
             setState(() {
               isWaiting = true;
             });
-            getMoreProducts(position++);
+            getMoreProducts(start = start + 5);
           }
           return true;
         },

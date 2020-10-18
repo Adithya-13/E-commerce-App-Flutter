@@ -8,6 +8,7 @@ class Product {
   final String image, title, description;
   final int price, size, id;
   final Color color;
+  final List<Variant> variants;
 
   Product({
     this.id,
@@ -17,7 +18,15 @@ class Product {
     this.description,
     this.size,
     this.color,
+    this.variants,
   });
+}
+
+class Variant {
+  final String color, image;
+  final int imageID;
+
+  Variant({this.color, this.image, this.imageID});
 }
 
 class ProductData {
@@ -25,25 +34,40 @@ class ProductData {
       "https://halal-food-service-290609.dt.r.appspot.com/products";
   List<Product> products = [];
 
-  Future getProductData(int page) async {
-    Response response = await get("$baseUrl?page=$page");
+  Future getProductData(int numberStart) async {
+    Response response =
+        await get("$baseUrl?start=$numberStart&limit=5&min=0&max=800");
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body);
       List responseData = decodedData["response"]["data"];
       for (int i = 0; i < responseData.length; i++) {
-        String title = decodedData["response"]["data"][i]["title"];
-        String image = decodedData["response"]["data"][i]["images"][0]["src"];
-        String description = decodedData["response"]["data"][i]["description"];
-        int price = decodedData["response"]["data"][i]["price"];
+        int id = responseData[i]["id"];
+        String title = responseData[i]["title"];
+        String image = responseData[i]["images"][0]["src"];
+        String description = responseData[i]["description"];
+        int price = responseData[i]["price"];
+
+        List variantsData = decodedData["response"]["data"][i]["images"];
+        List<Variant> variants = [];
+
+        for (int j = 0; j < variantsData.length; j++) {
+          String titleColor = variantsData[j]["alt"];
+          String imageVariant = variantsData[j]["src"];
+          int imageID = variantsData[j]["image_id"];
+
+          variants.add(Variant(
+              color: titleColor, image: imageVariant, imageID: imageID));
+        }
         Product item = Product(
           title: title,
           image: image,
           description: description,
           price: price,
-          id: i,
+          id: id,
           size: 10,
           color: Color((Random().nextDouble() * 0xFFFFFF).toInt())
               .withOpacity(1.0),
+          variants: variants,
         );
         products.add(item);
       }

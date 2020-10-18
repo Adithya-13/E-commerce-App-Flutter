@@ -10,7 +10,6 @@ class Categories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // By default our first item will be selected
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin),
       child: SizedBox(
