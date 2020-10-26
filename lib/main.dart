@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/models/ProductProvider.dart';
 import 'package:shop_app/screens/Welcome/welcome_screen.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool login = (prefs.getBool(kIsLoggedIn) ?? false);
+  runApp(MyApp(
+    login: login,
+  ));
 }
 
 class MyApp extends StatelessWidget {
+  final bool login;
+
+  const MyApp({Key key, @required this.login}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -25,7 +35,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
           accentColor: kTextColor,
         ),
-        home: WelcomeScreen(),
+        home: login ? HomeScreen() : WelcomeScreen(),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/models/Product.dart';
 import 'package:shop_app/models/ProductProvider.dart';
+import 'package:shop_app/network/ProductData.dart';
 import 'package:shop_app/screens/home/components/grid_view_list.dart';
 
 import 'categorries.dart';
@@ -16,6 +17,7 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   List<Product> products = [];
   bool isWaiting = false;
+  bool isLoadMore = false;
   int start = 0;
 
   void getListProducts(int numberStart) async {
@@ -34,16 +36,16 @@ class _BodyState extends State<Body> {
   }
 
   Future getMoreProducts(int numberStart) async {
-    isWaiting = true;
+    isLoadMore = true;
     try {
       List<Product> listProduct =
           await ProductData().getProductData(numberStart);
-      isWaiting = false;
+      isLoadMore = false;
       setState(() {
         products.addAll(listProduct);
       });
     } catch (e) {
-      isWaiting = false;
+      isLoadMore = false;
       print(e);
     }
   }
@@ -59,21 +61,24 @@ class _BodyState extends State<Body> {
     List<Widget> _container = [
       NotificationListener<ScrollNotification>(
         onNotification: (notification) {
-          if (!isWaiting &&
+          if (!isLoadMore &&
               notification.metrics.pixels ==
                   notification.metrics.maxScrollExtent) {
             setState(() {
-              isWaiting = true;
+              isLoadMore = true;
             });
             getMoreProducts(start = start + 5);
           }
           return true;
         },
-        child: GridViewList(products: products),
+        child: GridViewList(
+          products: products,
+          isLoadMore: isLoadMore,
+        ),
       ),
-      GridViewList(products: products),
-      GridViewList(products: products),
-      GridViewList(products: products),
+      // GridViewList(products: products),
+      // GridViewList(products: products),
+      // GridViewList(products: products),
     ];
 
     return ModalProgressHUD(

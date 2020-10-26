@@ -19,38 +19,36 @@ class Body extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return SizedBox(
       height: size.height,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            ProductTitleWithImage(product: product),
-            SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.only(
-                top: kDefaultPaddin,
-                left: kDefaultPaddin,
-                right: kDefaultPaddin,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
-                ),
-              ),
-              child: Column(
-                children: <Widget>[
-                  ColorAndSize(product: product),
-                  SizedBox(height: kDefaultPaddin / 2),
-                  Description(product: product),
-                  SizedBox(height: kDefaultPaddin / 2),
-                  CounterWithFavBtn(),
-                  SizedBox(height: kDefaultPaddin / 2),
-                  AddToCart(product: product),
-                ],
+      child: Column(
+        children: [
+          ProductTitleWithImage(product: product),
+          SizedBox(height: 20),
+          Container(
+            padding: EdgeInsets.only(
+              top: kDefaultPaddin,
+              left: kDefaultPaddin,
+              right: kDefaultPaddin,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(24),
+                topRight: Radius.circular(24),
               ),
             ),
-          ],
-        ),
+            child: Column(
+              children: <Widget>[
+                ColorAndSize(product: product),
+                SizedBox(height: kDefaultPaddin / 2),
+                Description(product: product),
+                SizedBox(height: kDefaultPaddin / 2),
+                CounterWithFavBtn(),
+                SizedBox(height: kDefaultPaddin / 2),
+                AddToCart(product: product),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

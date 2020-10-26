@@ -9,15 +9,29 @@ class GridViewList extends StatelessWidget {
   const GridViewList({
     Key key,
     @required this.products,
+    @required this.isLoadMore,
   }) : super(key: key);
 
   final List<Product> products;
+  final bool isLoadMore;
+
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isLoadMore ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: GridView.builder(
-        itemCount: products.length,
+        itemCount: products.length + 1,
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -25,17 +39,21 @@ class GridViewList extends StatelessWidget {
           // crossAxisSpacing: kDefaultPaddin,
           childAspectRatio: 0.75,
         ),
-        itemBuilder: (context, index) => ItemCard(
-          product: products[index],
-          press: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailsScreen(
-                product: products[index],
-              ),
-            ),
-          ),
-        ),
+        itemBuilder: (context, index) {
+          return index == products.length
+              ? _buildProgressIndicator()
+              : ItemCard(
+                  product: products[index],
+                  press: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailsScreen(
+                        product: products[index],
+                      ),
+                    ),
+                  ),
+                );
+        },
       ),
     );
   }
