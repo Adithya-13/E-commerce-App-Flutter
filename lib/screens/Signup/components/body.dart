@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shop_app/Screens/Login/login_screen.dart';
@@ -9,7 +10,6 @@ import 'package:shop_app/components/already_have_an_account_acheck.dart';
 import 'package:shop_app/components/rounded_button.dart';
 import 'package:shop_app/components/rounded_input_field.dart';
 import 'package:shop_app/components/rounded_password_field.dart';
-import 'package:shop_app/constants.dart';
 import 'package:shop_app/models/SignUp.dart';
 import 'package:shop_app/network/SignUpData.dart';
 
@@ -19,7 +19,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  String email, password, name;
+  String email, password;
 
   // File _image;
 
@@ -52,15 +52,32 @@ class _BodyState extends State<Body> {
       future: _futureSignUp,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          Fluttertoast.showToast(
-              msg: "Sign Up Successfully",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0);
-          return LoginScreen();
+          if (int.parse(snapshot.data.code) == 200) {
+            Fluttertoast.showToast(
+                msg: "Sign Up Successfully",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            return LoginScreen();
+          } else {
+            Fluttertoast.showToast(
+                msg: "Register Failed!",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 3,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            return Background(
+              child: ModalProgressHUD(
+                inAsyncCall: false,
+                child: buildSingleChildScrollView(size, context),
+              ),
+            );
+          }
         } else if (snapshot.hasError) {
           return throw Exception(snapshot.error);
         }
@@ -87,16 +104,9 @@ class _BodyState extends State<Body> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
           SizedBox(height: size.height * 0.03),
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: kPrimaryColor,
-              image: DecorationImage(
-                image: AssetImage("assets/images/bag_5.png"),
-              ),
-            ),
-            height: 150,
-            width: 150,
+          SvgPicture.asset(
+            "assets/icons/signup.svg",
+            height: size.height * 0.35,
           ),
           SizedBox(height: size.height * 0.03),
           RoundedInputField(
@@ -110,20 +120,6 @@ class _BodyState extends State<Body> {
               password = value;
             },
           ),
-          RoundedInputField(
-            hintText: "Your Name",
-            onChanged: (value) {
-              name = value;
-            },
-          ),
-          // RoundedButton(
-          //   text: "IMAGE",
-          //   color: kPrimaryLightColor,
-          //   textColor: kTextColor,
-          //   press: () {
-          //     getImage();
-          //   },
-          // ),
           SizedBox(
             height: 30,
           ),
@@ -131,7 +127,7 @@ class _BodyState extends State<Body> {
             text: "SIGNUP",
             press: () {
               setState(() {
-                if (email == null || password == null || name == null) {
+                if (email == null || password == null) {
                   Fluttertoast.showToast(
                       msg: "Field Cannot be null!",
                       toastLength: Toast.LENGTH_SHORT,
@@ -140,9 +136,8 @@ class _BodyState extends State<Body> {
                       backgroundColor: Colors.red,
                       textColor: Colors.white,
                       fontSize: 16.0);
-                  print("Null");
                 } else {
-                  _futureSignUp = createSignUp(email, password, name);
+                  _futureSignUp = createSignUp(email, password);
                 }
               });
             },

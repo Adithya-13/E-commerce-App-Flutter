@@ -4,7 +4,7 @@ class SignUp {
     this.message,
   });
 
-  int code;
+  String code;
   String message;
 
   factory SignUp.fromJson(Map<String, dynamic> json) => SignUp(

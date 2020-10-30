@@ -14,12 +14,8 @@ Future<SignIn> createSignIn(String email, String password) async {
   final http.Response response = await http.post('$baseUrl/login', body: body);
 
   final jsonData = json.decode(response.body);
-  var map = Map<String, dynamic>.from(jsonData);
-  var signInResponse = SignIn.fromJson(map);
+  SignIn signInResponse = SignIn.fromJson(jsonData);
+  print(signInResponse.message.code);
 
-  if (response.statusCode == 200) {
-    return signInResponse;
-  } else {
-    throw Exception("Failed to Sign In");
-  }
+  return signInResponse;
 }

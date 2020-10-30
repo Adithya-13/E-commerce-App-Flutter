@@ -46,16 +46,33 @@ class _BodyState extends State<Body> {
       future: _signIn,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          Fluttertoast.showToast(
-              msg: "Sign Up Successfully",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0);
-          saveData(true, snapshot.data.token);
-          return HomeScreen();
+          if (int.parse(snapshot.data.message.code) == 200) {
+            Fluttertoast.showToast(
+                msg: "Sign Up Successfully",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            saveData(true, snapshot.data.response.token);
+            return HomeScreen();
+          } else {
+            Fluttertoast.showToast(
+                msg: "Email or Password are wrong!",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 3,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            return Background(
+              child: ModalProgressHUD(
+                inAsyncCall: false,
+                child: buildSingleChildScrollView(size, context),
+              ),
+            );
+          }
         } else if (snapshot.hasError) {
           return throw Exception(snapshot.error);
         }
