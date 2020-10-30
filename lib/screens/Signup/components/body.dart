@@ -96,12 +96,9 @@ class _BodyState extends State<Body> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(
-            height: size.height * 0.03,
-          ),
           Text(
             "SIGNUP",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           SizedBox(height: size.height * 0.03),
           SvgPicture.asset(
@@ -119,9 +116,6 @@ class _BodyState extends State<Body> {
             onChanged: (value) {
               password = value;
             },
-          ),
-          SizedBox(
-            height: 30,
           ),
           RoundedButton(
             text: "SIGNUP",
