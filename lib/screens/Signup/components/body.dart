@@ -1,9 +1,5 @@
-import 'dart:io';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shop_app/Screens/Login/login_screen.dart';
 import 'package:shop_app/Screens/Signup/components/background.dart';
@@ -24,17 +20,19 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   String email, password, name;
-  File _image;
+
+  // File _image;
 
   Future<SignUp> _futureSignUp;
 
-  Future<void> getImage() async {
-    var image = await ImagePicker().getImage(source: ImageSource.gallery);
-    final File file = File(image.path);
-    setState(() {
-      _image = file;
-    });
-  }
+  //
+  // Future<void> getImage() async {
+  //   var image = await ImagePicker().getImage(source: ImageSource.gallery);
+  //   final File file = File(image.path);
+  //   setState(() {
+  //     _image = file;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -94,9 +92,7 @@ class _BodyState extends State<Body> {
               shape: BoxShape.circle,
               color: kPrimaryColor,
               image: DecorationImage(
-                image: _image != null
-                    ? FileImage(_image)
-                    : AssetImage("assets/images/bag_5.png"),
+                image: AssetImage("assets/images/bag_5.png"),
               ),
             ),
             height: 150,
@@ -120,14 +116,14 @@ class _BodyState extends State<Body> {
               name = value;
             },
           ),
-          RoundedButton(
-            text: "IMAGE",
-            color: kPrimaryLightColor,
-            textColor: kTextColor,
-            press: () {
-              getImage();
-            },
-          ),
+          // RoundedButton(
+          //   text: "IMAGE",
+          //   color: kPrimaryLightColor,
+          //   textColor: kTextColor,
+          //   press: () {
+          //     getImage();
+          //   },
+          // ),
           SizedBox(
             height: 30,
           ),
@@ -135,10 +131,7 @@ class _BodyState extends State<Body> {
             text: "SIGNUP",
             press: () {
               setState(() {
-                if (email == null ||
-                    password == null ||
-                    name == null ||
-                    _image == null) {
+                if (email == null || password == null || name == null) {
                   Fluttertoast.showToast(
                       msg: "Field Cannot be null!",
                       toastLength: Toast.LENGTH_SHORT,
@@ -149,7 +142,7 @@ class _BodyState extends State<Body> {
                       fontSize: 16.0);
                   print("Null");
                 } else {
-                  _futureSignUp = createSignUp(email, password, name, _image);
+                  _futureSignUp = createSignUp(email, password, name);
                 }
               });
             },
